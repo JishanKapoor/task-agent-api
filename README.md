@@ -129,4 +129,4 @@ pip install openai
 4. Push to the branch (git push origin my-feature-branch)
 5. Create a new Pull Request
 ### License
-This project is licensed under the MIT License - see the <a href=""></a> file for details.
+This project is licensed under the MIT License - see the <a href="https://github.com/Sanjoli04/task-agent-api/blob/main/LICENSE">LICENSE</a> file for details.
