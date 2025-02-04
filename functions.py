@@ -17,20 +17,22 @@ def get_task_output(AIPROXY_TOKEN, task):
     )
     # print(response.choices[0].message.content.strip())
     return response.choices[0].message.content.strip()
-def count_days(day:str):
+def count_days(dayname:str):
     ## count sundays instead of sunday
     days = {"monday": 0, "tuesday": 1, "wednesday": 2, "thursday": 3, "friday": 4, "saturday": 5, "sunday": 6}
     dayvalue = -1
     day = None
     for d in days:
-        if d in day:
+        if d in dayname.lower():
             dayvalue = days[d]
             day = d
             break
     try:
-        with open("/data/dates.txt") as file:
+        print("This will not cause any error")
+        with open("/data/dates.txt","r") as file:
+            print("My line")
             data = file.readlines()
-            count  = sum([1 for line in data if datetime.strptime("%Y-%m-%d", line.strip()).weekday()==dayvalue])
+            count  = sum([1 for line in data if datetime.strptime( line.strip(),"%Y-%m-%d").weekday()==dayvalue])
             f = open("/data/{}-count".format(day), "w")
             f.write(str(count))
             f.close()
