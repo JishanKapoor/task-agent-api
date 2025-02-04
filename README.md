@@ -1,4 +1,3 @@
-```md
 # Task Agent API
 
 ## Overview
