@@ -29,9 +29,13 @@ async def run_task(task: str):
     try:
         task_output = get_task_output(AIPROXY_TOKEN, task)
         task = task.lower()
+        days = {"monday": 0, "tuesday": 1, "wednesday": 2, "thursday": 3, "friday": 4, "saturday": 5, "sunday": 6}
+
         if "count" in task:
-            day = extract_dayname(task)
-            count_days(day)
+            for day in days:
+                if day in task:
+                    day = extract_dayname(task)
+                    count_days(day)
         elif "install" in task:
             pkgname = extract_package(task)
             correct_package = get_correct_pkgname(pkgname)
