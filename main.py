@@ -4,11 +4,12 @@ import os
 from functions import *
 import subprocess
 
-# ✅ Get from Azure App Service Environment Settings
-AIPROXY_TOKEN = os.getenv("AIPROXY_TOKEN")
+# ✅ Load from Azure App Service Configuration
+API_KEY = os.getenv("API_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY")
 
-if not AIPROXY_TOKEN:
-    raise RuntimeError("AIPROXY_TOKEN is not set in environment variables.")
+if not API_KEY or not SECRET_KEY:
+    raise RuntimeError("API_KEY and/or SECRET_KEY environment variables are not set.")
 
 app = FastAPI()
 
@@ -27,7 +28,7 @@ async def read_file(path: str):
 @app.post("/run")
 async def run_task(task: str):
     try:
-        task_output = get_task_output(AIPROXY_TOKEN, task)
+        task_output = get_task_output(API_KEY, task)
         task = task.lower()
         days = {
             "monday": 0, "tuesday": 1, "wednesday": 2,
@@ -37,8 +38,9 @@ async def run_task(task: str):
         if "count" in task:
             for day in days:
                 if day in task:
-                    day = extract_dayname(task)
-                    count_days(day)
+                    extracted_day = extract_dayname(task)
+                    count_days(extracted_day)
+                    break
         elif "install" in task:
             pkgname = extract_package(task)
             correct_package = get_correct_pkgname(pkgname)
