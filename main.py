@@ -1,8 +1,9 @@
+import os
+import subprocess
 import requests
 from fastapi import FastAPI, HTTPException
-import os
+
 from functions import *
-import subprocess
 
 # ✅ Load from Azure App Service Configuration
 API_KEY = os.getenv("API_KEY")
@@ -13,7 +14,6 @@ if not API_KEY or not SECRET_KEY:
 
 app = FastAPI()
 
-### /read endpoint
 @app.get("/read")
 async def read_file(path: str):
     if not path.startswith("/data"):
@@ -24,7 +24,6 @@ async def read_file(path: str):
         content = file.read()
     return {"content": content}
 
-### /run endpoint
 @app.post("/run")
 async def run_task(task: str):
     try:
@@ -50,6 +49,16 @@ async def run_task(task: str):
             return {"status": "Task is recognized but not implemented yet"}
 
         return {"status": "success", "task_output": task_output}
-
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+# ✅ Safe startup
+if __name__ == "__main__":
+    try:
+        import uvicorn
+    except ImportError:
+        print("uvicorn not found. Installing...")
+        subprocess.run(["pip", "install", "uvicorn"])
+        import uvicorn
+
+    uvicorn.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", 8000)))
